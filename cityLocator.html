@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+<h3>City Co-ordinate Getter Thingie</h3>
+
+<form>
+    City Name: <input type="text" name="cityInput" id="cityInput"><br/>
+    <button type="button" onclick="getCityData(this.form)">Check</button>
+</form>
+
+<div id="geography"></div>
+
+<script language="JavaScript">
+
+function getCityData(frm)
+{
+var cityXML = new XMLHttpRequest();
+var cityName = frm.cityInput.value;
+frm.cityInput.value = "";
+var cityURL1 = "http://maps.googleapis.com/maps/api/geocode/json?address=";
+var cityURL2 = "&sensor=false";
+var cityURL = cityURL1 + cityName + cityURL2;
+
+cityXML.onreadystatechange=function() {
+    if (cityXML.readyState == 4 && cityXML.status == 200) {
+        parseCity(cityXML.responseText);
+    }
+}
+
+cityXML.open("GET", cityURL, true);
+cityXML.send();
+}
+
+function parseCity(response) 
+{
+    var jsonArr = JSON.parse(response)
+    var i;
+    var output = "";
+
+    output += "<b>City: </b>" + jsonArr.results[0].address_components[0].long_name + "<br/>";
+    output += "<b>Co-ordinates: </b><br/>" + jsonArr.results[0].geometry.location.lat + " <b>latitude <br/>by<br/></b> " + jsonArr.results[0].geometry.location.lng + " <b>longitude</b><br/>";
+
+    document.getElementById("geography").innerHTML = output;
+}
+</script>
+
+</body>
+</html>
