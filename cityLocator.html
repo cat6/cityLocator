@@ -2,12 +2,13 @@
 <html>
 
 <head>
+    <title>City Locator</title>
     <meta charset="UTF-8">
 </head>
 
 <body>
 
-<h3>City Co-ordinate Getter Thingie</h3>
+<h3>City Locator</h3>
 
 <form>
     City Name: <input type="text" name="cityInput" id="cityInput"><br/>
@@ -28,7 +29,7 @@ function getCityData(frm)
 
     frm.cityInput.value = "";
 
-cityXML.onreadystatechange=function() 
+    cityXML.onreadystatechange=function() 
     {
         if (cityXML.readyState == 4 && cityXML.status == 200) 
         {
