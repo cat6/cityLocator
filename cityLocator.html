@@ -16,21 +16,24 @@
 
 function getCityData(frm)
 {
-var cityXML = new XMLHttpRequest();
-var cityName = frm.cityInput.value;
-frm.cityInput.value = "";
-var cityURL1 = "http://maps.googleapis.com/maps/api/geocode/json?address=";
-var cityURL2 = "&sensor=false";
-var cityURL = cityURL1 + cityName + cityURL2;
+    var cityXML = new XMLHttpRequest();
+    var cityURL1 = "http://maps.googleapis.com/maps/api/geocode/json?address=";
+    var cityName = frm.cityInput.value;
+    var cityURL2 = "&sensor=false";
+    var cityURL = cityURL1 + cityName + cityURL2;
 
-cityXML.onreadystatechange=function() {
-    if (cityXML.readyState == 4 && cityXML.status == 200) {
-        parseCity(cityXML.responseText);
+    frm.cityInput.value = "";
+
+cityXML.onreadystatechange=function() 
+    {
+        if (cityXML.readyState == 4 && cityXML.status == 200) 
+        {
+            parseCity(cityXML.responseText);
+        }
     }
-}
 
-cityXML.open("GET", cityURL, true);
-cityXML.send();
+    cityXML.open("GET", cityURL, true);
+    cityXML.send();
 }
 
 function parseCity(response) 
