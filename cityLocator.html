@@ -18,7 +18,6 @@
 <div id="geography"></div>
 
 <script>
-
 function getCityData(frm)
 {
     var cityXML = new XMLHttpRequest();
@@ -86,7 +85,7 @@ function parseCity(response, cityName)
             output += "</table>";
 
             // Streetview
-            output += "<img src='http://maps.googleapis.com/maps/api/streetview?size=500x500&location=" + lat + "," + lng + "&fov=90&heading=235&pitch=10' /><br/>";
+            output += "<img src='http://maps.googleapis.com/maps/api/streetview?size=667x500&location=" + lat + "," + lng + "&fov=120&heading=235&pitch=10' /><br/>";
             cityCount++;
         }
         else
