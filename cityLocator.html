@@ -20,6 +20,7 @@
 <script>
 function getCityData(frm)
 {
+    // Perform Google geolocation
     var cityXML = new XMLHttpRequest();
     var cityURL1 = "http://maps.googleapis.com/maps/api/geocode/json?address=";
     var cityName = frm.cityInput.value;
@@ -42,7 +43,8 @@ function getCityData(frm)
 
 function parseCity(response, cityName) 
 {
-    var jsonArr = JSON.parse(response)
+    // Parse response data and glean location data.  Accept only results that are valid cities and not place-names similar to cityName
+    var jsonArr = JSON.parse(response);
     var i;
     var j;
     var output = "";
@@ -51,13 +53,12 @@ function parseCity(response, cityName)
     var cityFlag = 0;
     var cityCount = 0;
 
-    // Foreach over every response and report
     for(i = 0; i < jsonArr.results.length; i++)
     {
         lat = jsonArr.results[i].geometry.location.lat;
         lng = jsonArr.results[i].geometry.location.lng;
 
-        output += "<table>"
+        output += "<table>";
         for(j = 0; j < jsonArr.results[i].address_components.length; j++)
         {
             if(jsonArr.results[i].address_components[j].types[0] == "locality")
@@ -74,7 +75,7 @@ function parseCity(response, cityName)
             }
             if(jsonArr.results[i].address_components[j].types[0] == "administrative_area_level_1" && cityFlag == 1)
             {
-                output += "<tr><td><b>State/Province:</b></td><td> " + jsonArr.results[i].address_components[2].long_name + "</td></tr><br/>";
+                output += "<tr><td><b>State/Province/Locality:</b></td><td> " + jsonArr.results[i].address_components[2].long_name + "</td></tr><br/>";
             }
         }
         j = 0;
@@ -95,6 +96,8 @@ function parseCity(response, cityName)
         cityFlag = 0;
     }
     output += "<b>Number of cities with this name found:</b> " + cityCount + "<br/>";
+
+    // Actually write the output string to the document
     document.getElementById("geography").innerHTML = output;
 }
 </script>
