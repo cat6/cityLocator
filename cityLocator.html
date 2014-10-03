@@ -47,9 +47,22 @@ function parseCity(response)
     var i;
     var output = "";
 
-    output += "<b>City: </b>" + jsonArr.results[0].address_components[0].long_name + "<br/>";
-    output += "<b>Co-ordinates: </b><br/>" + jsonArr.results[0].geometry.location.lat + " <b>latitude <br/>by<br/></b> " + jsonArr.results[0].geometry.location.lng + " <b>longitude</b><br/>";
+    // Foreach over every response and report
+    for(i = 0; i < jsonArr.results.length; i++)
+    {
+        output += "<b>City: </b>" + jsonArr.results[i].address_components[0].long_name + "<br/>";
+        if(jsonArr.results[i].address_components.long_name)
+        {
+            output += "<b>Country: </b>" + jsonArr.results[i].address_components.pop().long_name + "<br/>";
+        }
+        if(jsonArr.results[i].address_components[2].long_name)
+        {
+            output += "<b>State/Province:</b> " + jsonArr.results[i].address_components[2].long_name + "<br/>";
+        }
 
+        output += "<b>Co-ordinates: </b><br/>" + jsonArr.results[i].geometry.location.lat + " <b>latitude <br/>by<br/></b> " + jsonArr.results[i].geometry.location.lng + " <b>longitude</b><br/><br/>";
+    }
+    output += "<b>Number of cities with this name found:</b> " + jsonArr.results.length + "<br/>";
     document.getElementById("geography").innerHTML = output;
 }
 </script>
