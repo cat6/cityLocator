@@ -46,11 +46,17 @@ function parseCity(response)
     var jsonArr = JSON.parse(response)
     var i;
     var output = "";
+    var lat = "";
+    var lng = "";
 
     // Foreach over every response and report
     for(i = 0; i < jsonArr.results.length; i++)
     {
+        lat = jsonArr.results[i].geometry.location.lat;
+        lng = jsonArr.results[i].geometry.location.lng;
+
         output += "<b>City: </b>" + jsonArr.results[i].address_components[0].long_name + "<br/>";
+
         if(jsonArr.results[i].address_components.long_name)
         {
             output += "<b>Country: </b>" + jsonArr.results[i].address_components.pop().long_name + "<br/>";
@@ -60,7 +66,10 @@ function parseCity(response)
             output += "<b>State/Province:</b> " + jsonArr.results[i].address_components[2].long_name + "<br/>";
         }
 
-        output += "<b>Co-ordinates: </b><br/>" + jsonArr.results[i].geometry.location.lat + " <b>latitude <br/>by<br/></b> " + jsonArr.results[i].geometry.location.lng + " <b>longitude</b><br/><br/>";
+        output += "<b>Co-ordinates: </b><br/>" + lat + " <b>latitude <br/>by<br/></b> " + lng + " <b>longitude</b><br/><br/>";
+        
+        // Streetview
+        output += "<img src='http://maps.googleapis.com/maps/api/streetview?size=500x500&location=" + lat + "," + lng + "&fov=90&heading=235&pitch=10' /><br/>";
     }
     output += "<b>Number of cities with this name found:</b> " + jsonArr.results.length + "<br/>";
     document.getElementById("geography").innerHTML = output;
