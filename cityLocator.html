@@ -86,7 +86,15 @@ function parseCity(response, cityName)
             output += "</table>";
 
             // Streetview
-            output += "<img src='http://maps.googleapis.com/maps/api/streetview?size=667x500&location=" + lat + "," + lng + "&fov=120&heading=235&pitch=10' /><br/>";
+            output += "<img src='http://maps.googleapis.com/maps/api/streetview?size=650x600&location=" + lat + "," + lng + "&fov=120&heading=235&pitch=10' /><br/>";
+
+            // Try adding a couple of smaller pics in different places
+            output += "<tr>"
+            output += "<td><img src='http://maps.googleapis.com/maps/api/streetview?size=300x200&location=" + (lat - 0.001) + "," + (lng - 0.001) + "&fov=120&heading=235&pitch=10' /></td>";
+            output += "<td><img src='http://maps.googleapis.com/maps/api/streetview?size=300x200&location=" + (lat + 0.001) + "," + (lng + 0.001) + "&fov=120&heading=235&pitch=10' /></td>";
+            output += "<td><img src='http://maps.googleapis.com/maps/api/streetview?size=300x200&location=" + (lat + 0.005) + "," + (lng - 0.005) + "&fov=120&heading=235&pitch=10' /></td>";
+            output += "</tr>"
+
             cityCount++;
         }
         else
@@ -95,7 +103,7 @@ function parseCity(response, cityName)
         }
         cityFlag = 0;
     }
-    output += "<b>Number of cities with this name found:</b> " + cityCount + "<br/>";
+    output += "<br/><b>Number of cities with this name found:</b> " + cityCount + "<br/>";
 
     // Actually write the output string to the document
     document.getElementById("geography").innerHTML = output;
