@@ -33,7 +33,7 @@ function getCityData(frm)
     {
         if (cityXML.readyState == 4 && cityXML.status == 200) 
         {
-            parseCity(cityXML.responseText);
+            parseCity(cityXML.responseText, cityName);
         }
     }
 
@@ -41,13 +41,16 @@ function getCityData(frm)
     cityXML.send();
 }
 
-function parseCity(response) 
+function parseCity(response, cityName) 
 {
     var jsonArr = JSON.parse(response)
     var i;
+    var j;
     var output = "";
     var lat = "";
     var lng = "";
+    var cityFlag = 0;
+    var cityCount = 0;
 
     // Foreach over every response and report
     for(i = 0; i < jsonArr.results.length; i++)
@@ -55,23 +58,44 @@ function parseCity(response)
         lat = jsonArr.results[i].geometry.location.lat;
         lng = jsonArr.results[i].geometry.location.lng;
 
-        output += "<b>City: </b>" + jsonArr.results[i].address_components[0].long_name + "<br/>";
-
-        if(jsonArr.results[i].address_components.long_name)
+        output += "<table>"
+        for(j = 0; j < jsonArr.results[i].address_components.length; j++)
         {
-            output += "<b>Country: </b>" + jsonArr.results[i].address_components.pop().long_name + "<br/>";
+            if(jsonArr.results[i].address_components[j].types[0] == "locality")
+            {
+                if(jsonArr.results[i].address_components[j].long_name.toLowerCase() == cityName.toLowerCase())
+                {
+                    output += "<tr><td><b>City: </b></td><td>" + jsonArr.results[i].address_components[j].long_name + "</td></tr><br/>";
+                    cityFlag = 1;
+                }
+            }  
+            if(jsonArr.results[i].address_components[j].types[0] == "country" && cityFlag == 1)
+            {
+                output += "<tr><td><b>Country: </b></td><td>" + jsonArr.results[i].address_components[j].long_name + "</td></tr><br/>";
+            }
+            if(jsonArr.results[i].address_components[j].types[0] == "administrative_area_level_1" && cityFlag == 1)
+            {
+                output += "<tr><td><b>State/Province:</b></td><td> " + jsonArr.results[i].address_components[2].long_name + "</td></tr><br/>";
+            }
         }
-        if(jsonArr.results[i].address_components[2].long_name)
-        {
-            output += "<b>State/Province:</b> " + jsonArr.results[i].address_components[2].long_name + "<br/>";
-        }
+        j = 0;
 
-        output += "<b>Co-ordinates: </b><br/>" + lat + " <b>latitude <br/>by<br/></b> " + lng + " <b>longitude</b><br/><br/>";
-        
-        // Streetview
-        output += "<img src='http://maps.googleapis.com/maps/api/streetview?size=500x500&location=" + lat + "," + lng + "&fov=90&heading=235&pitch=10' /><br/>";
+        if(cityFlag == 1)
+        {
+            output += "<tr><td><b>Co-ordinates: </b></tr><br/>" + "<td><b>latitude</b> " + lat + " <b>by longitude</b> " + lng + "</td></tr><br/><br/>";
+            output += "</table>";
+
+            // Streetview
+            output += "<img src='http://maps.googleapis.com/maps/api/streetview?size=500x500&location=" + lat + "," + lng + "&fov=90&heading=235&pitch=10' /><br/>";
+            cityCount++;
+        }
+        else
+        {
+            output += "</table>";
+        }
+        cityFlag = 0;
     }
-    output += "<b>Number of cities with this name found:</b> " + jsonArr.results.length + "<br/>";
+    output += "<b>Number of cities with this name found:</b> " + cityCount + "<br/>";
     document.getElementById("geography").innerHTML = output;
 }
 </script>
